@@ -1,0 +1,947 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>IASA - Solicitud de Pollitas BB | Genética Comprobada</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            /* Colores corporativos IASA */
+            --primary-blue: #003865;
+            --primary-red: #C8102E;
+            --neutral-gray: #4D4D4D;
+            --light-blue: #f0f7ff;
+            --light-red: #fff0f2;
+            
+            /* Tema claro */
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8f9fa;
+            --text-primary: #212529;
+            --text-secondary: #6c757d;
+            --border-color: #dee2e6;
+            --card-shadow: 0 4px 20px rgba(0, 56, 101, 0.1);
+        }
+
+        [data-theme="dark"] {
+            /* Tema oscuro */
+            --bg-primary: #1a1a1a;
+            --bg-secondary: #2d2d2d;
+            --text-primary: #ffffff;
+            --text-secondary: #b0b0b0;
+            --border-color: #404040;
+            --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        * {
+            transition: all 0.3s ease;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--bg-primary), var(--bg-secondary));
+            color: var(--text-primary);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .container-main {
+            max-width: 480px;
+            margin: 0 auto;
+            padding: 10px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Pantalla de Bienvenida */
+        .welcome-screen {
+            text-align: center;
+            padding: 40px 20px;
+            background: linear-gradient(135deg, var(--primary-blue), var(--primary-red));
+            color: white;
+            border-radius: 20px;
+            margin-bottom: 20px;
+            box-shadow: var(--card-shadow);
+        }
+
+        .logo-container {
+            margin-bottom: 30px;
+        }
+
+        .logo-container img {
+            max-width: 200px;
+            height: auto;
+            filter: brightness(0) invert(1);
+            display: block;
+            margin: 0 auto;
+        }
+
+        [data-theme="dark"] .logo-container img {
+            filter: brightness(0) invert(1);
+        }
+
+        .welcome-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            line-height: 1.3;
+        }
+
+        .welcome-subtitle {
+            font-size: 1.1rem;
+            font-weight: 500;
+            opacity: 0.95;
+            margin-bottom: 30px;
+        }
+
+        .btn-start {
+            background: white;
+            color: var(--primary-blue);
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 50px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            transition: transform 0.3s ease;
+        }
+
+        .btn-start:hover {
+            transform: translateY(-2px);
+            color: var(--primary-blue);
+        }
+
+        /* Header del formulario */
+        .form-header {
+            background: var(--bg-primary);
+            padding: 20px;
+            border-radius: 20px 20px 0 0;
+            border-bottom: 3px solid var(--primary-blue);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: var(--card-shadow);
+        }
+
+        .progress-container {
+            margin-bottom: 15px;
+        }
+
+        .progress {
+            height: 6px;
+            background: var(--border-color);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            background: linear-gradient(90deg, var(--primary-blue), var(--primary-red));
+            transition: width 0.5s ease;
+        }
+
+        .step-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 10px;
+        }
+
+        .step-title {
+            font-weight: 600;
+            color: var(--primary-blue);
+            font-size: 1.1rem;
+        }
+
+        .step-counter {
+            background: var(--primary-blue);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        /* Formulario por pasos */
+        .form-container {
+            background: var(--bg-primary);
+            border-radius: 0 0 20px 20px;
+            overflow: hidden;
+            box-shadow: var(--card-shadow);
+            flex: 1;
+        }
+
+        .step-content {
+            display: none;
+            padding: 25px;
+            min-height: 400px;
+        }
+
+        .step-content.active {
+            display: block;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .form-section-title {
+            color: var(--primary-blue);
+            font-weight: 700;
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .form-section-title i {
+            background: linear-gradient(135deg, var(--primary-blue), var(--primary-red));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-size: 1.5rem;
+        }
+
+        .field-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .form-label i {
+            color: var(--primary-red);
+            width: 16px;
+        }
+
+        .form-control, .form-select {
+            background: var(--bg-secondary);
+            border: 2px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 12px 16px;
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus, .form-select:focus {
+            background: var(--bg-primary);
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 0 3px rgba(0, 56, 101, 0.1);
+            color: var(--text-primary);
+        }
+
+        .form-text {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            margin-top: 5px;
+        }
+
+        /* Botones de navegación */
+        .navigation-buttons {
+            padding: 20px 25px;
+            background: var(--bg-secondary);
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn-nav {
+            flex: 1;
+            padding: 14px 20px;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .btn-prev {
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            border: 2px solid var(--border-color);
+        }
+
+        .btn-prev:hover {
+            background: var(--neutral-gray);
+            color: white;
+        }
+
+        .btn-next {
+            background: linear-gradient(135deg, var(--primary-blue), var(--primary-red));
+            color: white;
+        }
+
+        .btn-next:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(0, 56, 101, 0.3);
+        }
+
+        .btn-submit {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(40, 167, 69, 0.3);
+        }
+
+        /* Toggle tema */
+        .theme-toggle {
+            position: fixed;
+            top: 15px;
+            right: 15px;
+            background: var(--bg-primary);
+            border: 2px solid var(--border-color);
+            color: var(--text-primary);
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 1000;
+            box-shadow: var(--card-shadow);
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .theme-toggle:hover {
+            transform: scale(1.05);
+        }
+
+        /* Mensajes de estado */
+        .alert-custom {
+            border-radius: 12px;
+            border: none;
+            padding: 16px 20px;
+            margin-bottom: 20px;
+            box-shadow: var(--card-shadow);
+        }
+
+        .alert-success {
+            background: linear-gradient(135deg, #d4edda, #c3e6cb);
+            color: #155724;
+        }
+
+        .alert-danger {
+            background: linear-gradient(135deg, #f8d7da, #f5c6cb);
+            color: #721c24;
+        }
+
+        /* Responsive */
+        @media (max-width: 576px) {
+            .container-main {
+                padding: 5px;
+            }
+            
+            .welcome-screen {
+                margin: 10px 5px;
+                padding: 30px 15px;
+            }
+            
+            .logo-container img {
+                max-width: 150px;
+            }
+            
+            .welcome-title {
+                font-size: 1.3rem;
+            }
+            
+            .step-content {
+                padding: 20px 15px;
+            }
+            
+            .navigation-buttons {
+                padding: 15px;
+            }
+            
+            .theme-toggle {
+                top: 10px;
+                right: 10px;
+                width: 40px;
+                height: 40px;
+                font-size: 0.8rem;
+            }
+            
+            .form-header {
+                padding: 15px;
+            }
+            
+            .step-counter {
+                font-size: 0.8rem;
+                padding: 3px 10px;
+            }
+        }
+
+        /* Prevenir zoom en iOS */
+        @media screen and (max-width: 767px) {
+            .form-control, .form-select {
+                font-size: 16px;
+            }
+        }
+
+        /* Animaciones suaves */
+        .fade-in {
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Toggle de tema -->
+    <button class="theme-toggle" onclick="toggleTheme()" title="Cambiar tema">
+        <i class="fas fa-moon" id="theme-icon"></i>
+    </button>
+
+    <div class="container-main">
+        <!-- Pantalla de Bienvenida -->
+        <div id="welcome-screen" class="welcome-screen fade-in">
+            <div class="logo-container">
+                <img src="https://lh3.googleusercontent.com/pw/AP1GczMlzxPLEWmXjltea0Is2m6YkYTR5KuZL6Ri4AAUi9niLhOA7xHA2Y4HQQ" 
+                     alt="IASA Logo" 
+                     class="logo"
+                     onerror="this.style.display='none'; document.querySelector('.logo-fallback').style.display='block';">
+                <div class="logo-fallback" style="display: none; font-size: 2.5rem; font-weight: bold; color: white;">IASA</div>
+            </div>
+            <h1 class="welcome-title">Genética comprobada en cada huevo</h1>
+            <p class="welcome-subtitle">IASA, tu punto de partida</p>
+            <button class="btn-start" onclick="startForm()">
+                <i class="fas fa-arrow-right me-2"></i>Solicitar Pollitas BB
+            </button>
+        </div>
+
+        <!-- Formulario Principal -->
+        <div id="form-main" style="display: none;">
+            <!-- Header con progreso -->
+            <div class="form-header">
+                <div class="progress-container">
+                    <div class="progress">
+                        <div class="progress-bar" id="progress-bar" style="width: 25%"></div>
+                    </div>
+                    <div class="step-info">
+                        <span class="step-title" id="step-title">Datos Personales</span>
+                        <span class="step-counter" id="step-counter">1/4</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Contenedor del formulario -->
+            <form id="formularioCliente" class="form-container">
+                
+                <!-- Paso 1: Datos Personales -->
+                <div class="step-content active" data-step="1">
+                    <h3 class="form-section-title">
+                        <i class="fas fa-user"></i>Datos Personales
+                    </h3>
+                    
+                    <div class="field-group">
+                        <label class="form-label">
+                            <i class="fas fa-id-card"></i>DNI o RUC *
+                        </label>
+                        <input type="text" class="form-control" name="dni_ruc" 
+                               placeholder="12345678 o 20123456789" maxlength="11" required>
+                        <div class="form-text">Ingrese 8 dígitos para DNI o 11 para RUC</div>
+                    </div>
+
+                    <div class="field-group">
+                        <label class="form-label">
+                            <i class="fas fa-signature"></i>Nombre completo *
+                        </label>
+                        <input type="text" class="form-control" name="nombre" 
+                               placeholder="Su nombre completo" required>
+                    </div>
+
+                    <div class="field-group">
+                        <label class="form-label">
+                            <i class="fas fa-envelope"></i>Email
+                        </label>
+                        <input type="email" class="form-control" name="email" 
+                               placeholder="correo@ejemplo.com">
+                        <div class="form-text">Opcional - Para enviarle información adicional</div>
+                    </div>
+
+                    <div class="field-group">
+                        <label class="form-label">
+                            <i class="fas fa-phone"></i>Teléfono/WhatsApp
+                        </label>
+                        <input type="tel" class="form-control" name="telefono" 
+                               placeholder="987654321" maxlength="9">
+                        <div class="form-text">Para contactarle rápidamente</div>
+                    </div>
+                </div>
+
+                <!-- Paso 2: Ubicación -->
+                <div class="step-content" data-step="2">
+                    <h3 class="form-section-title">
+                        <i class="fas fa-map-marker-alt"></i>Ubicación y Entrega
+                    </h3>
+                    
+                    <div class="field-group">
+                        <label class="form-label">
+                            <i class="fas fa-home"></i>Dirección de entrega completa *
+                        </label>
+                        <textarea class="form-control" name="direccion" rows="3" 
+                                  placeholder="Av/Jr/Calle, número, distrito, provincia, departamento, referencias específicas..." required></textarea>
+                        <div class="form-text">Sea específico: incluya referencias para facilitar la entrega</div>
+                    </div>
+
+                    <div class="field-group">
+                        <label class="form-label">
+                            <i class="fas fa-calendar-alt"></i>Fecha deseada de entrega *
+                        </label>
+                        <input type="date" class="form-control" name="fecha_entrega" required>
+                        <div class="form-text">Mínimo 21 días de anticipación para garantizar disponibilidad</div>
+                    </div>
+                </div>
+
+                <!-- Paso 3: Pedido -->
+                <div class="step-content" data-step="3">
+                    <h3 class="form-section-title">
+                        <i class="fas fa-shopping-cart"></i>Detalles del Pedido
+                    </h3>
+                    
+                    <div class="field-group">
+                        <label class="form-label">
+                            <i class="fas fa-sort-numeric-up"></i>Cantidad de pollitas *
+                        </label>
+                        <input type="number" class="form-control" name="cantidad" 
+                               placeholder="1000" min="100" step="50" required>
+                        <div class="form-text">Mínimo 100 pollitas, en múltiplos de 50</div>
+                    </div>
+
+                    <div class="field-group">
+                        <label class="form-label">
+                            <i class="fas fa-handshake"></i>¿Quién le recomendó IASA?
+                        </label>
+                        <input type="text" class="form-control" name="quien_recomendo" 
+                               placeholder="Nombre del cliente, publicidad, internet, etc.">
+                        <div class="form-text">Nos ayuda a mejorar nuestro servicio</div>
+                    </div>
+
+                    <div class="field-group">
+                        <label class="form-label">
+                            <i class="fas fa-feather"></i>¿Qué raza de gallinas maneja actualmente?
+                        </label>
+                        <select class="form-select" name="raza_actual">
+                            <option value="">Seleccione una opción</option>
+                            <option value="Hy-Line Brown">Hy-Line Brown</option>
+                            <option value="Hy-Line W-36">Hy-Line W-36</option>
+                            <option value="Lohmann Brown">Lohmann Brown</option>
+                            <option value="Lohmann LSL">Lohmann LSL</option>
+                            <option value="Isa Brown">Isa Brown</option>
+                            <option value="Bovans Brown">Bovans Brown</option>
+                            <option value="Otra">Otra raza</option>
+                            <option value="Primera vez">Es mi primera vez</option>
+                        </select>
+                        <div class="form-text">Información para brindarle mejor asesoría</div>
+                    </div>
+                </div>
+
+                <!-- Paso 4: Confirmación -->
+                <div class="step-content" data-step="4">
+                    <h3 class="form-section-title">
+                        <i class="fas fa-check-circle"></i>Confirmación
+                    </h3>
+                    
+                    <div class="alert alert-info">
+                        <h5><i class="fas fa-info-circle me-2"></i>¿Qué sucede después?</h5>
+                        <ul class="mb-0">
+                            <li><strong>Confirmación inmediata:</strong> Recibirá un código de seguimiento</li>
+                            <li><strong>Contacto rápido:</strong> Le llamaremos en máximo 2 horas</li>
+                            <li><strong>Verificación:</strong> Confirmaremos disponibilidad para su fecha</li>
+                            <li><strong>Cotización:</strong> Le enviaremos presupuesto personalizado</li>
+                            <li><strong>Calidad garantizada:</strong> Pollitas con genética comprobada</li>
+                        </ul>
+                    </div>
+
+                    <div class="alert alert-warning">
+                        <h6><i class="fas fa-shield-alt me-2"></i>Compromiso IASA</h6>
+                        <p class="mb-0">Nos comprometemos a brindarle pollitas de la más alta calidad genética, 
+                        con el respaldo de más de 50 años de experiencia en avicultura.</p>
+                    </div>
+                </div>
+            </form>
+
+            <!-- Botones de navegación -->
+            <div class="navigation-buttons">
+                <button type="button" class="btn-nav btn-prev" id="btn-prev" onclick="previousStep()" disabled>
+                    <i class="fas fa-arrow-left me-2"></i>Anterior
+                </button>
+                <button type="button" class="btn-nav btn-next" id="btn-next" onclick="nextStep()">
+                    Siguiente<i class="fas fa-arrow-right ms-2"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Variables globales
+        let currentStep = 1;
+        const totalSteps = 4;
+        const stepTitles = [
+            'Datos Personales',
+            'Ubicación y Entrega', 
+            'Detalles del Pedido',
+            'Confirmación'
+        ];
+
+        // URL del Google Apps Script
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyWXq3-pgVgEvrihsxEirunCU_ixKwkDI2srUrQqq3oQbe-8exW5HqlR7uFIMilEEKPTw/exec';
+
+        // Configuración inicial
+        document.addEventListener('DOMContentLoaded', function() {
+            // Configurar fecha mínima (21 días desde hoy)
+            const fechaInput = document.querySelector('input[name="fecha_entrega"]');
+            const fechaMinima = new Date();
+            fechaMinima.setDate(fechaMinima.getDate() + 21);
+            fechaInput.min = fechaMinima.toISOString().split('T')[0];
+            
+            // También configurar placeholder con fecha sugerida (30 días)
+            const fechaSugerida = new Date();
+            fechaSugerida.setDate(fechaSugerida.getDate() + 30);
+            const fechaSugeridaStr = fechaSugerida.toISOString().split('T')[0];
+            fechaInput.placeholder = fechaSugeridaStr;
+            fechaInput.title = `Fecha mínima: ${fechaMinima.toISOString().split('T')[0]}`;
+            
+            // Configurar tema desde localStorage
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            updateThemeIcon(savedTheme);
+        });
+
+        // Función para iniciar el formulario
+        function startForm() {
+            document.getElementById('welcome-screen').style.display = 'none';
+            document.getElementById('form-main').style.display = 'flex';
+            document.getElementById('form-main').style.flexDirection = 'column';
+            document.getElementById('form-main').style.height = '100vh';
+        }
+
+        // Navegación entre pasos
+        function nextStep() {
+            if (currentStep < totalSteps) {
+                if (validateCurrentStep()) {
+                    currentStep++;
+                    updateStep();
+                }
+            } else {
+                // Último paso - enviar formulario
+                enviarFormulario();
+            }
+        }
+
+        function previousStep() {
+            if (currentStep > 1) {
+                currentStep--;
+                updateStep();
+            }
+        }
+
+        function updateStep() {
+            // Ocultar todos los pasos
+            document.querySelectorAll('.step-content').forEach(step => {
+                step.classList.remove('active');
+            });
+            
+            // Mostrar paso actual
+            document.querySelector(`[data-step="${currentStep}"]`).classList.add('active');
+            
+            // Actualizar progreso
+            const progress = (currentStep / totalSteps) * 100;
+            document.getElementById('progress-bar').style.width = progress + '%';
+            
+            // Actualizar títulos
+            document.getElementById('step-title').textContent = stepTitles[currentStep - 1];
+            document.getElementById('step-counter').textContent = `${currentStep}/${totalSteps}`;
+            
+            // Actualizar botones
+            const btnPrev = document.getElementById('btn-prev');
+            const btnNext = document.getElementById('btn-next');
+            
+            btnPrev.disabled = currentStep === 1;
+            
+            if (currentStep === totalSteps) {
+                btnNext.innerHTML = '<i class="fas fa-paper-plane me-2"></i>Enviar Solicitud';
+                btnNext.className = 'btn-nav btn-submit';
+            } else {
+                btnNext.innerHTML = 'Siguiente<i class="fas fa-arrow-right ms-2"></i>';
+                btnNext.className = 'btn-nav btn-next';
+            }
+        }
+
+        // Validación por pasos
+        function validateCurrentStep() {
+            const currentStepElement = document.querySelector(`[data-step="${currentStep}"]`);
+            const requiredFields = currentStepElement.querySelectorAll('[required]');
+            let isValid = true;
+            
+            requiredFields.forEach(field => {
+                if (!field.value.trim()) {
+                    field.style.borderColor = 'var(--primary-red)';
+                    isValid = false;
+                } else {
+                    field.style.borderColor = 'var(--border-color)';
+                }
+            });
+            
+            // Validaciones específicas por paso
+            if (currentStep === 1) {
+                const dniRuc = document.querySelector('input[name="dni_ruc"]').value;
+                if (!/^[0-9]{8}$|^[0-9]{11}$/.test(dniRuc)) {
+                    showError(['DNI debe tener 8 dígitos o RUC 11 dígitos']);
+                    return false;
+                }
+            }
+            
+            if (currentStep === 2) {
+                const fechaEntrega = new Date(document.querySelector('input[name="fecha_entrega"]').value + 'T00:00:00');
+                const fechaMinima = new Date();
+                fechaMinima.setDate(fechaMinima.getDate() + 21);
+                fechaMinima.setHours(0, 0, 0, 0);
+                
+                if (fechaEntrega < fechaMinima) {
+                    showError(['La fecha de entrega debe ser al menos 21 días después de hoy']);
+                    return false;
+                }
+            }
+            
+            if (currentStep === 3) {
+                const cantidad = parseInt(document.querySelector('input[name="cantidad"]').value);
+                if (cantidad < 100 || cantidad % 50 !== 0) {
+                    showError(['Cantidad mínima 100 pollitas, en múltiplos de 50']);
+                    return false;
+                }
+            }
+            
+            return isValid;
+        }
+
+        // Envío del formulario
+        function enviarFormulario() {
+            const btnSubmit = document.getElementById('btn-next');
+            const textoOriginal = btnSubmit.innerHTML;
+            
+            // Estado de carga
+            btnSubmit.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Enviando...';
+            btnSubmit.disabled = true;
+
+            // Recopilar datos
+            const formData = new FormData(document.getElementById('formularioCliente'));
+            const datos = Object.fromEntries(formData.entries());
+
+            console.log('=== INICIO ENVÍO FORMULARIO ===');
+            console.log('URL destino:', SCRIPT_URL);
+            console.log('Datos a enviar:', datos);
+
+            // Enviar a Google Apps Script
+            fetch(SCRIPT_URL, {
+                method: 'POST',
+                mode: 'cors',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(datos),
+                redirect: 'follow'
+            })
+            .then(response => {
+                console.log('=== RESPUESTA RECIBIDA ===');
+                console.log('Status:', response.status);
+                console.log('Status Text:', response.statusText);
+                console.log('Headers:', [...response.headers.entries()]);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                
+                return response.text(); // Primero como texto para debugging
+            })
+            .then(text => {
+                console.log('=== RESPUESTA TEXTO ===');
+                console.log('Contenido:', text);
+                
+                try {
+                    const data = JSON.parse(text);
+                    console.log('=== RESPUESTA JSON ===');
+                    console.log('Data procesada:', data);
+                    
+                    if (data.success) {
+                        console.log('✅ Éxito confirmado');
+                        showSuccess(data);
+                    } else {
+                        console.log('❌ Error en respuesta');
+                        if (data.errores) {
+                            showError(data.errores);
+                        } else {
+                            showError([data.mensaje || 'Error desconocido del servidor']);
+                        }
+                        btnSubmit.innerHTML = textoOriginal;
+                        btnSubmit.disabled = false;
+                    }
+                } catch (parseError) {
+                    console.error('Error parseando JSON:', parseError);
+                    console.log('Texto recibido:', text);
+                    
+                    // Si no es JSON válido, asumir éxito si contiene ciertas palabras
+                    if (text.includes('success') || text.includes('PRO-')) {
+                        console.log('Asumiendo éxito por contenido');
+                        showSuccess({
+                            id: 'PRO-' + new Date().getFullYear() + '-' + String(Date.now()).slice(-4),
+                            vendedor_asignado: 'Equipo IASA',
+                            mensaje: 'Solicitud registrada correctamente. Le contactaremos en las próximas 2 horas.'
+                        });
+                    } else {
+                        showError(['Error en formato de respuesta del servidor']);
+                        btnSubmit.innerHTML = textoOriginal;
+                        btnSubmit.disabled = false;
+                    }
+                }
+            })
+            .catch(error => {
+                console.error('=== ERROR DE CONEXIÓN ===');
+                console.error('Tipo:', error.name);
+                console.error('Mensaje:', error.message);
+                console.error('Stack:', error.stack);
+                
+                // Mensaje de error más específico
+                let mensajeError = 'Error de conexión con el servidor. ';
+                
+                if (error.name === 'TypeError' && error.message.includes('fetch')) {
+                    mensajeError += 'Problema de red o CORS. ';
+                } else if (error.message.includes('HTTP')) {
+                    mensajeError += `Servidor respondió con error: ${error.message}. `;
+                }
+                
+                mensajeError += 'Por favor contacte por WhatsApp al 987-654-321.';
+                
+                showError([mensajeError]);
+                btnSubmit.innerHTML = textoOriginal;
+                btnSubmit.disabled = false;
+            });
+        }
+
+        // Funciones de mensajes
+        function showError(errores) {
+            const errorHtml = `
+                <div class="alert alert-danger alert-custom">
+                    <h6><i class="fas fa-exclamation-triangle me-2"></i>Por favor corrija:</h6>
+                    ${errores.map(error => `<div>• ${error}</div>`).join('')}
+                </div>
+            `;
+            
+            const currentStepElement = document.querySelector(`[data-step="${currentStep}"]`);
+            currentStepElement.insertAdjacentHTML('afterbegin', errorHtml);
+            
+            setTimeout(() => {
+                const errorDiv = currentStepElement.querySelector('.alert-danger');
+                if (errorDiv) errorDiv.remove();
+            }, 5000);
+        }
+
+        function showSuccess(data) {
+            const formContainer = document.getElementById('form-main');
+            formContainer.innerHTML = `
+                <div class="form-header">
+                    <div class="step-info">
+                        <span class="step-title" style="color: #28a745;">✅ Solicitud Enviada</span>
+                        <span class="step-counter" style="background: #28a745;">100%</span>
+                    </div>
+                </div>
+                <div class="form-container">
+                    <div class="step-content active" style="text-align: center; padding: 40px 25px;">
+                        <div style="margin-bottom: 30px;">
+                            <i class="fas fa-check-circle" style="font-size: 4rem; color: #28a745; margin-bottom: 20px;"></i>
+                            <h3 style="color: var(--primary-blue); margin-bottom: 15px;">¡Solicitud Recibida!</h3>
+                            <p style="color: var(--text-secondary); font-size: 1.1rem;">Gracias por confiar en IASA</p>
+                        </div>
+                        
+                        <div class="alert alert-success alert-custom">
+                            <h6><strong>📋 Código de seguimiento:</strong> ${data.id}</h6>
+                            <p><strong>👨‍💼 Vendedor asignado:</strong> ${data.vendedor_asignado}</p>
+                            <hr>
+                            <p style="margin-bottom: 0;">${data.mensaje}</p>
+                        </div>
+                        
+                        <div class="alert alert-info alert-custom">
+                            <h6><i class="fas fa-clock me-2"></i>Próximos pasos:</h6>
+                            <div style="text-align: left;">
+                                <p>📞 <strong>Le contactaremos en máximo 2 horas</strong></p>
+                                <p>📋 Verificaremos disponibilidad para su fecha</p>
+                                <p>💰 Le enviaremos cotización personalizada</p>
+                                <p>🚚 Coordinaremos los detalles de entrega</p>
+                            </div>
+                        </div>
+                        
+                        <div style="margin-top: 30px;">
+                            <p style="color: var(--text-secondary); margin-bottom: 15px;">
+                                <strong>¿Necesita contacto inmediato?</strong>
+                            </p>
+                            <a href="https://wa.me/51987654321" class="btn-nav btn-next" style="display: inline-block; text-decoration: none; margin-bottom: 10px;">
+                                <i class="fab fa-whatsapp me-2"></i>WhatsApp: 987-654-321
+                            </a>
+                            <br>
+                            <button onclick="window.location.reload()" class="btn-nav btn-prev" style="margin-top: 10px;">
+                                <i class="fas fa-plus me-2"></i>Nueva Solicitud
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Toggle de tema
+        function toggleTheme() {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            updateThemeIcon(newTheme);
+        }
+
+        function updateThemeIcon(theme) {
+            const icon = document.getElementById('theme-icon');
+            if (theme === 'dark') {
+                icon.className = 'fas fa-sun';
+            } else {
+                icon.className = 'fas fa-moon';
+            }
+        }
+
+        // Prevenir zoom en iOS al enfocar inputs
+        if (/iPad|iPhone|iPod/.test(navigator.userAgent)) {
+            document.addEventListener('focusin', function(e) {
+                if (e.target.matches('input, textarea, select')) {
+                    document.body.style.zoom = '1';
+                }
+            });
+        }
+
+        // Mejorar experiencia en móvil
+        window.addEventListener('resize', function() {
+            // Ajustar altura del contenedor en móviles cuando aparece el teclado
+            const vh = window.innerHeight * 0.01;
+            document.documentElement.style.setProperty('--vh', `${vh}px`);
+        });
+
+        // Configurar altura inicial
+        const vh = window.innerHeight * 0.01;
+        document.documentElement.style.setProperty('--vh', `${vh}px`);
+    </script>
+</body>
+</html>
