@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IASA - Solicitud de Pollitas BB</title>
+    <style>
+        /* VARIABLES CSS PARA TEMA */
+        :root {
+            --primary-color: #003865;
+            --secondary-color: #C8102E;
+            --accent-color: #4D4D4D;
+            --bg-color: #ffffff;
+            --text-color: #333333;
+            --card-bg: #ffffff;
+            --input-bg: #ffffff;
+            --border-color: #e0e0e0;
+            --shadow-color: rgba(0, 0, 0, 0.1);
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #1a1a1a;
+            --text-color: #ffffff;
+            --card-bg: #2d2d2d;
+            --input-bg: #3d3d3d;
+            --border-color: #4d4d4d;
+            --shadow-color: rgba(255, 255, 255, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            min-height: 100vh;
+            color: var(--text-color);
+            transition: all 0.3s ease;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .form-card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px var(--shadow-color);
+            overflow: hidden;
+            width: 100%;
+            position: relative;
+            backdrop-filter: blur(10px);
+        }
+
+        .form-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            padding: 30px;
+            text-align: center;
+            color: white;
+            position: relative;
+        }
+
+        .logo {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 15px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .logo img {
+            width: 60px;
+            height: 60px;
+            object-fit: contain;
+        }
+
+        .form-header h1 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .form-header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            font-weight: 300;
+        }
+
+        .theme-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255,255,255,0.2);
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .theme-toggle:hover {
+            background: rgba(255,255,255,0.3);
+            transform: scale(1.1);
+        }
+
+        .form-content {
+            padding: 40px;
+        }
+
+        .progress-bar {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 40px;
+            position: relative;
+        }
+
+        .progress-step {
+            flex: 1;
+            text-align: center;
+            position: relative;
+        }
+
+        .progress-step::before {
+            content: '';
+            position: absolute;
+            top: 15px;
+            left: 50%;
+            right: -50%;
+            height: 2px;
+            background: var(--border-color);
+            z-index: 1;
+        }
+
+        .progress-step:last-child::before {
+            display: none;
+        }
+
+        .progress-step.active::before {
+            background: var(--primary-color);
+        }
+
+        .step-number {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: var(--border-color);
+            color: var(--text-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 10px;
+            position: relative;
+            z-index: 2;
+            transition: all 0.3s ease;
+        }
+
+        .progress-step.active .step-number {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .step-title {
+            font-size: 0.9rem;
+            color: var(--accent-color);
+        }
+
+        .progress-step.active .step-title {
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        .step-content {
+            display: none;
+        }
+
+        .step-content.active {
+            display: block;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--text-color);
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
+            font-size: 16px;
+            background: var(--input-bg);
+            color: var(--text-color);
+            transition: all 0.3s ease;
+        }
+
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(0, 56, 101, 0.1);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .button-group {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+            gap: 15px;
+        }
+
+        .btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            flex: 1;
+        }
+
+        .btn-secondary {
+            background: var(--border-color);
+            color: var(--text-color);
+        }
+
+        .btn-secondary:hover {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 56, 101, 0.3);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        .error-message {
+            background: #fee;
+            border: 2px solid #fcc;
+            color: #c66;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+            display: none;
+        }
+
+        .success-message {
+            background: #efe;
+            border: 2px solid #cfc;
+            color: #6c6;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+            display: none;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid var(--border-color);
+            border-top: 4px solid var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* PREVENIR ZOOM EN iOS */
+        @media screen and (-webkit-min-device-pixel-ratio:0) {
+            select, textarea, input[type="text"], input[type="password"], 
+            input[type="datetime"], input[type="datetime-local"], 
+            input[type="date"], input[type="month"], input[type="time"], 
+            input[type="week"], input[type="number"], input[type="email"], 
+            input[type="url"], input[type="search"], input[type="tel"] {
+                font-size: 16px;
+            }
+        }
+
+        /* MEJORAR EXPERIENCIA TÁCTIL */
+        @media (hover: none) and (pointer: coarse) {
+            .btn {
+                min-height: 48px;
+            }
+            
+            input, textarea, select {
+                min-height: 48px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="form-card">
+            <div class="form-header">
+                <button class="theme-toggle" onclick="toggleTheme()" aria-label="Cambiar tema">
+                    🌙
+                </button>
+                
+                <div class="logo">
+                    <img src="https://iasa.com.pe/wp-content/uploads/2021/03/Logo-IASA-200x200-1.png" 
+                         alt="IASA Logo" 
+                         onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                    <div style="display:none; color: var(--primary-color); font-weight: bold; font-size: 24px;">IASA</div>
+                </div>
+                
+                <h1>Solicitud de Pollitas BB</h1>
+                <p>Genética comprobada en cada huevo. IASA, tu punto de partida</p>
+            </div>
+
+            <div class="form-content">
+                <div class="progress-bar">
+                    <div class="progress-step active">
+                        <div class="step-number">1</div>
+                        <div class="step-title">Datos Personales</div>
+                    </div>
+                    <div class="progress-step">
+                        <div class="step-number">2</div>
+                        <div class="step-title">Ubicación y Entrega</div>
+                    </div>
+                    <div class="progress-step">
+                        <div class="step-number">3</div>
+                        <div class="step-title">Detalles del Pedido</div>
+                    </div>
+                    <div class="progress-step">
+                        <div class="step-number">4</div>
+                        <div class="step-title">Confirmación</div>
+                    </div>
+                </div>
+
+                <form id="formen">
+                    <!-- PASO 1: DATOS PERSONALES -->
+                    <div class="step-content active" data-step="1">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="dni_ruc">DNI / RUC *</label>
+                                <input type="text" id="dni_ruc" name="dni_ruc" required 
+                                       pattern="[0-9]{8}|[0-9]{11}" 
+                                       title="Ingrese 8 dígitos para DNI o 11 para RUC"
+                                       placeholder="12345678 o 20123456789">
+                            </div>
+                            <div class="form-group">
+                                <label for="telefono">Teléfono / WhatsApp *</label>
+                                <input type="tel" id="telefono" name="telefono" required 
+                                       pattern="[0-9]{9}" 
+                                       title="Ingrese 9 dígitos"
+                                       placeholder="987654321">
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="nombre_contacto">Nombre completo *</label>
+                            <input type="text" id="nombre_contacto" name="nombre_contacto" required 
+                                   placeholder="Juan Pérez García">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="email">Email (opcional)</label>
+                            <input type="email" id="email" name="email" 
+                                   placeholder="correo@ejemplo.com">
+                        </div>
+                    </div>
+
+                    <!-- PASO 2: UBICACIÓN Y ENTREGA -->
+                    <div class="step-content" data-step="2">
+                        <div class="form-group">
+                            <label for="direccion_entrega">Dirección completa de entrega *</label>
+                            <textarea id="direccion_entrega" name="direccion_entrega" required 
+                                      placeholder="Av. Los Graneros 123, Distrito, Provincia, Departamento"></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="fecha_entrega">Fecha deseada de entrega *</label>
+                            <input type="date" id="fecha_entrega" name="fecha_entrega" required>
+                        </div>
+                    </div>
+
+                    <!-- PASO 3: DETALLES DEL PEDIDO -->
+                    <div class="step-content" data-step="3">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="cantidad_pollitas">Cantidad de pollitas BB *</label>
+                                <input type="number" id="cantidad_pollitas" name="cantidad_pollitas" required 
+                                       min="100" step="50" 
+                                       placeholder="1000">
+                                <small style="color: var(--accent-color);">Mínimo 100, múltiplos de 50</small>
+                            </div>
+                            <div class="form-group">
+                                <label for="raza_actual">¿Qué raza maneja actualmente?</label>
+                                <select id="raza_actual" name="raza_actual">
+                                    <option value="">Seleccionar...</option>
+                                    <option value="Rhode Island Red">Rhode Island Red</option>
+                                    <option value="Hy-Line Brown">Hy-Line Brown</option>
+                                    <option value="Lohmann Brown">Lohmann Brown</option>
+                                    <option value="ISA Brown">ISA Brown</option>
+                                    <option value="Novogen Brown">Novogen Brown</option>
+                                    <option value="Otra">Otra</option>
+                                    <option value="Primera vez">Es mi primera vez</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="quien_recomendo">¿Quién nos recomendó?</label>
+                            <input type="text" id="quien_recomendo" name="quien_recomendo" 
+                                   placeholder="Nombre del contacto, empresa o 'Búsqueda en Google'">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="observaciones">Observaciones adicionales</label>
+                            <textarea id="observaciones" name="observaciones" 
+                                      placeholder="Comentarios adicionales, requerimientos especiales, etc."></textarea>
+                        </div>
+                    </div>
+
+                    <!-- PASO 4: CONFIRMACIÓN -->
+                    <div class="step-content" data-step="4">
+                        <h3 style="color: var(--primary-color); margin-bottom: 20px;">Confirme sus datos</h3>
+                        <div id="resumen-datos"></div>
+                        
+                        <div style="background: var(--input-bg); padding: 20px; border-radius: 10px; margin: 20px 0; border: 2px solid var(--border-color);">
+                            <h4 style="color: var(--secondary-color); margin-bottom: 15px;">📞 Próximos pasos:</h4>
+                            <ul style="margin-left: 20px; line-height: 1.6;">
+                                <li>Nuestro equipo se contactará con usted en las próximas <strong>2 horas</strong></li>
+                                <li>Confirmaremos disponibilidad para la fecha solicitada</li>
+                                <li>Le proporcionaremos la cotización oficial</li>
+                                <li>Coordinaremos los detalles de entrega</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="button-group">
+                        <button type="button" class="btn btn-secondary" onclick="anteriorPaso()" id="btn-anterior" style="display: none;">
+                            ← Anterior
+                        </button>
+                        <button type="button" class="btn btn-primary" onclick="siguientePaso()" id="btn-siguiente">
+                            Siguiente →
+                        </button>
+                        <button type="submit" class="btn btn-primary" id="btn-enviar" style="display: none;">
+                            ✓ Enviar Solicitud
+                        </button>
+                    </div>
+                </form>
+
+                <div class="loading" id="loading">
+                    <div class="spinner"></div>
+                    <p>Enviando solicitud...</p>
+                </div>
+
+                <div class="error-message" id="error-message"></div>
+                <div class="success-message" id="success-message"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // CONFIGURACIÓN CON PROXY PARA SOLUCIONAR CORS
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx0ftZ5gk05n-Ou49iXVVe21KhswblH5S9bsNQBKxzYUAlLtAl5xpmG0bjHuYo-4TMG1g/exec';
+        
+        // Configuración del proxy para resolver CORS
+        const PROXY_CONFIG = {
+            url: 'https://api.allorigins.win/raw?url=',
+            method: 'POST'
+        };
+
+        // Variables globales
+        let currentStep = 1;
+        const totalSteps = 4;
+        let stepTitles = [
+            'Datos Personales',
+            'Ubicación y Entrega', 
+            'Detalles del Pedido',
+            'Confirmación'
+        ];
+
+        // FUNCIONES DE NAVEGACIÓN
+        function siguientePaso() {
+            if (validarPasoActual()) {
+                if (currentStep < totalSteps) {
+                    currentStep++;
+                    mostrarPaso(currentStep);
+                }
+            }
+        }
+
+        function anteriorPaso() {
+            if (currentStep > 1) {
+                currentStep--;
+                mostrarPaso(currentStep);
+            }
+        }
+
+        function mostrarPaso(step) {
+            // Ocultar todos los pasos
+            document.querySelectorAll('.step-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // Mostrar paso actual
+            document.querySelector(`[data-step="${step}"]`).classList.add('active');
+            
+            // Actualizar barra de progreso
+            document.querySelectorAll('.progress-step').forEach((stepElement, index) => {
+                if (index < step) {
+                    stepElement.classList.add('active');
+                } else {
+                    stepElement.classList.remove('active');
+                }
+            });
+            
+            // Actualizar botones
+            document.getElementById('btn-anterior').style.display = step > 1 ? 'block' : 'none';
+            document.getElementById('btn-siguiente').style.display = step < totalSteps ? 'block' : 'none';
+            document.getElementById('btn-enviar').style.display = step === totalSteps ? 'block' : 'none';
+            
+            // Si es el último paso, mostrar resumen
+            if (step === totalSteps) {
+                mostrarResumen();
+            }
+        }
+
+        function validarPasoActual() {
+            const stepElement = document.querySelector(`[data-step="${currentStep}"]`);
+            const requiredFields = stepElement.querySelectorAll('[required]');
+            let isValid = true;
+
+            requiredFields.forEach(field => {
+                if (!field.value.trim()) {
+                    field.focus();
+                    mostrarError(`Por favor complete: ${field.previousElementSibling.textContent}`);
+                    isValid = false;
+                    return false;
+                }
+                
+                // Validaciones específicas
+                if (field.name === 'dni_ruc') {
+                    if (!/^[0-9]{8}$|^[0-9]{11}$/.test(field.value)) {
+                        field.focus();
+                        mostrarError('DNI debe tener 8 dígitos o RUC 11 dígitos');
+                        isValid = false;
+                        return false;
+                    }
+                }
+                
+                if (field.name === 'telefono') {
+                    if (!/^[0-9]{9}$/.test(field.value)) {
+                        field.focus();
+                        mostrarError('El teléfono debe tener 9 dígitos');
+                        isValid = false;
+                        return false;
+                    }
+                }
+                
+                if (field.name === 'fecha_entrega') {
+                    const fechaSeleccionada = new Date(field.value);
+                    const fechaMinima = new Date();
+                    fechaMinima.setDate(fechaMinima.getDate() + 21);
+                    
+                    if (fechaSeleccionada < fechaMinima) {
+                        field.focus();
+                        mostrarError('La fecha de entrega debe ser al menos 21 días después de hoy');
+                        isValid = false;
+                        return false;
+                    }
+                }
+                
+                if (field.name === 'cantidad_pollitas') {
+                    const cantidad = parseInt(field.value);
+                    if (cantidad < 100) {
+                        field.focus();
+                        mostrarError('La cantidad mínima es 100 pollitas');
+                        isValid = false;
+                        return false;
+                    }
+                    if (cantidad % 50 !== 0) {
+                        field.focus();
+                        mostrarError('La cantidad debe ser múltiplo de 50');
+                        isValid = false;
+                        return false;
+                    }
+                }
+            });
+
+            return isValid;
+        }
+
+        function mostrarResumen() {
+            const formData = new FormData(document.getElementById('formen'));
+            const datos = Object.fromEntries(formData);
+            
+            const resumen = `
+                <div style="background: var(--input-bg); padding: 20px; border-radius: 10px; border: 2px solid var(--border-color);">
+                    <h4 style="color: var(--primary-color); margin-bottom: 15px;">👤 Datos Personales</h4>
+                    <p><strong>Nombre:</strong> ${datos.nombre_contacto}</p>
+                    <p><strong>DNI/RUC:</strong> ${datos.dni_ruc}</p>
+                    <p><strong>Teléfono:</strong> ${datos.telefono}</p>
+                    <p><strong>Email:</strong> ${datos.email || 'No proporcionado'}</p>
+                </div>
+                
+                <div style="background: var(--input-bg); padding: 20px; border-radius: 10px; border: 2px solid var(--border-color); margin-top: 15px;">
+                    <h4 style="color: var(--primary-color); margin-bottom: 15px;">📍 Entrega</h4>
+                    <p><strong>Dirección:</strong> ${datos.direccion_entrega}</p>
+                    <p><strong>Fecha deseada:</strong> ${new Date(datos.fecha_entrega).toLocaleDateString('es-PE')}</p>
+                </div>
+                
+                <div style="background: var(--input-bg); padding: 20px; border-radius: 10px; border: 2px solid var(--border-color); margin-top: 15px;">
+                    <h4 style="color: var(--primary-color); margin-bottom: 15px;">🐣 Pedido</h4>
+                    <p><strong>Cantidad:</strong> ${parseInt(datos.cantidad_pollitas).toLocaleString()} pollitas BB</p>
+                    <p><strong>Raza actual:</strong> ${datos.raza_actual || 'No especificado'}</p>
+                    <p><strong>Recomendado por:</strong> ${datos.quien_recomendo || 'No especificado'}</p>
+                    ${datos.observaciones ? `<p><strong>Observaciones:</strong> ${datos.observaciones}</p>` : ''}
+                </div>
+            `;
+            
+            document.getElementById('resumen-datos').innerHTML = resumen;
+        }
+
+        // FUNCIÓN DE ENVÍO CON PROXY
+        async function enviarFormulario() {
+            try {
+                mostrarLoading(true);
+                ocultarMensajes();
+
+                const formData = new FormData(document.getElementById('formen'));
+                const datos = Object.fromEntries(formData);
+                
+                console.log('=== INICIO ENVÍO FORMULARIO ===');
+                console.log('Datos a enviar:', datos);
+                console.log('URL destino:', SCRIPT_URL);
+
+                // MÉTODO 1: Intentar envío directo primero
+                try {
+                    console.log('Intentando envío directo...');
+                    const respuestaDirecta = await fetch(SCRIPT_URL, {
+                        method: 'POST',
+                        mode: 'no-cors',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                        },
+                        body: new URLSearchParams(datos)
+                    });
+                    
+                    console.log('Envío directo exitoso');
+                    mostrarExito('¡Solicitud enviada exitosamente! Nos contactaremos pronto.');
+                    limpiarFormulario();
+                    return;
+                    
+                } catch (errorDirecto) {
+                    console.log('Envío directo falló, intentando con proxy...');
+                }
+
+                // MÉTODO 2: Usar proxy como backup
+                const urlConProxy = PROXY_CONFIG.url + encodeURIComponent(SCRIPT_URL);
+                console.log('URL con proxy:', urlConProxy);
+                
+                const respuestaProxy = await fetch(urlConProxy, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: new URLSearchParams(datos)
+                });
+
+                if (respuestaProxy.ok) {
+                    console.log('Envío con proxy exitoso');
+                    mostrarExito('¡Solicitud enviada exitosamente! Nos contactaremos pronto.');
+                    limpiarFormulario();
+                } else {
+                    throw new Error(`Error del servidor: ${respuestaProxy.status}`);
+                }
+
+            } catch (error) {
+                console.error('Error al enviar formulario:', error);
+                mostrarError('Error de conexión con el servidor. Problema de red o CORS. Por favor contacte por WhatsApp al 987-654-321.');
+            } finally {
+                mostrarLoading(false);
+            }
+        }
+
+        function mostrarLoading(show) {
+            document.getElementById('loading').style.display = show ? 'block' : 'none';
+            document.getElementById('btn-enviar').disabled = show;
+        }
+
+        function mostrarError(mensaje) {
+            const errorDiv = document.getElementById('error-message');
+            errorDiv.textContent = mensaje;
+            errorDiv.style.display = 'block';
+            setTimeout(() => {
+                errorDiv.style.display = 'none';
+            }, 5000);
+        }
+
+        function mostrarExito(mensaje) {
+            const successDiv = document.getElementById('success-message');
+            successDiv.textContent = mensaje;
+            successDiv.style.display = 'block';
+        }
+
+        function ocultarMensajes() {
+            document.getElementById('error-message').style.display = 'none';
+            document.getElementById('success-message').style.display = 'none';
+        }
+
+        function limpiarFormulario() {
+            document.getElementById('formen').reset();
+            currentStep = 1;
+            mostrarPaso(1);
+        }
+
+        // TEMA CLARO/OSCURO
+        function toggleTheme() {
+            const body = document.body;
+            const currentTheme = body.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            
+            body.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            
+            const toggle = document.querySelector('.theme-toggle');
+            toggle.textContent = newTheme === 'dark' ? '☀️' : '🌙';
+        }
+
+        // INICIALIZACIÓN
+        document.addEventListener('DOMContentLoaded', function() {
+            // Configurar fecha mínima
+            const fechaInput = document.getElementById('fecha_entrega');
+            const fechaMinima = new Date();
+            fechaMinima.setDate(fechaMinima.getDate() + 21);
+            fechaInput.min = fechaMinima.toISOString().split('T')[0];
+
+            // Restaurar tema guardado
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.body.setAttribute('data-theme', savedTheme);
+            const toggle = document.querySelector('.theme-toggle');
+            toggle.textContent = savedTheme === 'dark' ? '☀️' : '🌙';
+
+            // Event listeners
+            document.getElementById('formen').addEventListener('submit', function(e) {
+                e.preventDefault();
+                if (currentStep === totalSteps) {
+                    enviarFormulario();
+                }
+            });
+
+            // Navegación con teclado
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' && e.target.tagName !== 'TEXTAREA') {
+                    e.preventDefault();
+                    if (currentStep < totalSteps) {
+                        siguientePaso();
+                    } else {
+                        enviarFormulario();
+                    }
+                }
+            });
+
+            console.log('Formulario IASA con proxy inicializado correctamente');
+        });
+    </script>
+</body>
+</html>
